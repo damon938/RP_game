@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Carte Joueur RPG</title>
+<title>Carte Joueur RPG - Debug</title>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&family=Cinzel+Decorative:wght@700&display=swap" rel="stylesheet">
 <style>
   body { font-family: 'Poppins', sans-serif; background: #1a1a1a; color: #eee; padding: 20px; }
@@ -26,19 +26,11 @@
   .player-card .row { display: flex; justify-content: space-between; flex-wrap: wrap; margin: 5px 0; }
   .player-card .col { flex: 1 1 30%; margin: 3px 0; min-width: 120px; }
   .player-card p { margin: 2px 0; }
-  .stat-bar { background: #444; border-radius: 10px; overflow: hidden; margin: 5px 0; height: 20px; position: relative; }
-  .stat-fill { height: 100%; text-align: right; padding-right: 5px; color: #fff; font-weight: bold; width: 0%; transition: width 1s ease; }
-  .pv { background: #ff4d4d; }
-  .pm { background: #4d79ff; }
-  .pf { background: #ffa64d; }
-  .pe { background: #33cc33; }
-  .vitesse { background: #ffcc00; }
-  .icon { margin-right: 5px; }
 </style>
 </head>
 <body>
 
-<h1>Carte Joueur RPG</h1>
+<h1>Carte Joueur RPG - Debug</h1>
 
 <div class="input-container">
   <input type="text" id="playerId" placeholder="Entrez l'ID du joueur">
@@ -50,7 +42,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/tabletop@1.6.0/src/tabletop.js"></script>
 <script>
-const sheetId = '1O2abmp1w-IdvbqHXSEXD63Nu6XK4KfJqiOL_8M-i2fA';
+const sheetId = '1O2abmp1w-IdvbqHXSEXD63Nu6XK4KfJqiOL_8M-i2fA'; // Ton Google Sheet
 
 function safeValue(value) {
   if(value === null || value === undefined || value.toString().trim() === "") return "VIDE";
@@ -79,26 +71,28 @@ function getPlayer() {
         return;
       }
 
-      console.log("Données reçues :", p);
+      console.log("🔹 Données reçues pour l'ID", playerId, ":", p);
+      console.log("🔹 Toutes les clés reçues :", Object.keys(p));
 
-      const Nom = safeValue(p.Nom);
-      const Race = safeValue(p.Race);
-      const Classe = safeValue(p.Classe);
-      const Niveau = safeValue(p.Niveau);
-      const Rang = safeValue(p.Rang);
-      const Argent = safeValue(p.Argent);
-      const Victoires = safeValue(p.Victoires);
-      const Defaites = safeValue(p.Defaites);
-      const Quetes = safeValue(p.Quetes);
-      const PV = safeValue(p.PV);
-      const PM = safeValue(p.PM);
-      const PF = safeValue(p.PF);
-      const PE = safeValue(p.PE);
-      const Vitesse = safeValue(p.Vitesse);
-      const Competence = safeValue(p.Competence);
-      const Attribut = safeValue(p.Attribut);
-      const Familier = safeValue(p.Familier);
-      const XP = safeValue(p.XP);
+      // Maintenant on peut essayer d'afficher les colonnes connues
+      const Nom = safeValue(p.Nom || p.nom);
+      const Race = safeValue(p.Race || p.race);
+      const Classe = safeValue(p.Classe || p.classe);
+      const Niveau = safeValue(p.Niveau || p.niveau);
+      const Rang = safeValue(p.Rang || p.rang);
+      const Argent = safeValue(p.Argent || p.argent);
+      const Victoires = safeValue(p.Victoires || p.victoires);
+      const Defaites = safeValue(p.Defaites || p.defaites);
+      const Quetes = safeValue(p.Quetes || p.quetes);
+      const PV = safeValue(p.PV || p.pv);
+      const PM = safeValue(p.PM || p.pm);
+      const PF = safeValue(p.PF || p.pf);
+      const PE = safeValue(p.PE || p.pe);
+      const Vitesse = safeValue(p.Vitesse || p.vitesse);
+      const Competence = safeValue(p.Competence || p.competence);
+      const Attribut = safeValue(p.Attribut || p.attribut);
+      const Familier = safeValue(p.Familier || p.familier);
+      const XP = safeValue(p.XP || p.xp);
 
       playerDiv.innerHTML = `
         <h2>${Nom}</h2>
@@ -122,30 +116,8 @@ function getPlayer() {
           <div class="col"><strong>Attribut:</strong> ${Attribut}</div>
           <div class="col"><strong>Familier:</strong> ${Familier}</div>
         </div>
-
-        <p><span class="icon">❤️</span>PV:</p>
-        <div class="stat-bar"><div class="stat-fill pv">${PV}</div></div>
-
-        <p><span class="icon">🔵</span>PM:</p>
-        <div class="stat-bar"><div class="stat-fill pm">${PM}</div></div>
-
-        <p><span class="icon">💪</span>PF:</p>
-        <div class="stat-bar"><div class="stat-fill pf">${PF}</div></div>
-
-        <p><span class="icon">⚡</span>PE:</p>
-        <div class="stat-bar"><div class="stat-fill pe">${PE}</div></div>
-
-        <p><span class="icon">🏃‍♂️</span>Vitesse:</p>
-        <div class="stat-bar"><div class="stat-fill vitesse">${Vitesse}</div></div>
       `;
-
       playerDiv.style.display = 'block';
-
-      document.querySelectorAll('.stat-fill').forEach(fill => {
-        const value = parseInt(fill.textContent) || 0;
-        fill.style.width = value + '%';
-      });
-
     }
   });
 }
