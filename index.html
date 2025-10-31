@@ -18,18 +18,21 @@
     background: #2a2a2a; 
     padding: 20px; 
     border-radius: 15px; 
-    max-width: 600px; 
+    max-width: 700px; 
     margin: 0 auto; 
     box-shadow: 0 0 20px rgba(0,0,0,0.5);
   }
   .player-card h2 { text-align: center; font-family: 'Cinzel Decorative', serif; color: #ffd700; margin-bottom: 15px; }
-  .player-card p { margin: 5px 0; }
+  .player-card .row { display: flex; justify-content: space-between; flex-wrap: wrap; margin: 5px 0; }
+  .player-card .col { flex: 1 1 45%; margin: 3px 0; }
+  .player-card p { margin: 2px 0; }
   .stat-bar {
     background: #444; 
     border-radius: 10px; 
     overflow: hidden; 
     margin: 5px 0; 
     height: 20px;
+    position: relative;
   }
   .stat-fill {
     height: 100%; 
@@ -37,12 +40,15 @@
     padding-right: 5px; 
     color: #fff; 
     font-weight: bold;
+    width: 0%;
+    transition: width 1s ease;
   }
   .pv { background: #ff4d4d; }
   .pm { background: #4d79ff; }
   .pf { background: #ffa64d; }
   .pe { background: #33cc33; }
   .vitesse { background: #ffcc00; }
+  .icon { margin-right: 5px; }
 </style>
 </head>
 <body>
@@ -75,36 +81,58 @@ function getPlayer() {
   fetch(`${apiUrl}/search?id=${playerId}`)
     .then(res => res.json())
     .then(data => {
-      if (data.length === 0) {
+      console.log(data); // debug
+      if(!data || data.length === 0) {
         errorDiv.textContent = 'Joueur inconnu';
         return;
       }
 
-      const p = data[0]; // joueur trouvé
+      const p = data[0];
 
       playerDiv.innerHTML = `
         <h2>${p.Nom || '-'}</h2>
-        <p><strong>Race:</strong> ${p.Race || '-'} | <strong>Classe:</strong> ${p.Classe || '-'} | <strong>Niveau:</strong> ${p.Niveau || '-'}</p>
-        <p><strong>Rang:</strong> ${p.Rang || '-'} | <strong>Argent:</strong> ${p.Argent || '-'} | <strong>XP:</strong> ${p.XP || '-'}</p>
-        <p><strong>Victoires:</strong> ${p.Victoires || '-'} | <strong>Défaites:</strong> ${p.Défaites || '-'} | <strong>Quêtes:</strong> ${p.Quêtes || '-'}</p>
-        <p><strong>Compétence:</strong> ${p.Compétence || '-'} | <strong>Familier:</strong> ${p.Familier || '-'}</p>
+        <div class="row">
+          <div class="col"><strong>Race:</strong> ${p.Race || '-'}</div>
+          <div class="col"><strong>Classe:</strong> ${p.Classe || '-'}</div>
+          <div class="col"><strong>Niveau:</strong> ${p.Niveau || '-'}</div>
+          <div class="col"><strong>Rang:</strong> ${p.Rang || '-'}</div>
+          <div class="col"><strong>Argent:</strong> ${p.Argent || '-'}</div>
+          <div class="col"><strong>XP:</strong> ${p.XP || '-'}</div>
+        </div>
+        <div class="row">
+          <div class="col"><strong>Victoires:</strong> ${p.Victoires || '-'}</div>
+          <div class="col"><strong>Défaites:</strong> ${p.Defaites || '-'}</div>
+          <div class="col"><strong>Quêtes:</strong> ${p.Quetes || '-'}</div>
+        </div>
+        <div class="row">
+          <div class="col"><strong>Compétence:</strong> ${p.Competence || '-'}</div>
+          <div class="col"><strong>Attribut:</strong> ${p.Attribut || '-'}</div>
+          <div class="col"><strong>Familier:</strong> ${p.Familier || '-'}</div>
+        </div>
 
-        <p>PV:</p>
-        <div class="stat-bar"><div class="stat-fill pv" style="width:${p.PV || 0}%">${p.PV || 0}</div></div>
+        <p><span class="icon">❤️</span>PV:</p>
+        <div class="stat-bar"><div class="stat-fill pv">${p.PV || 0}</div></div>
 
-        <p>PM:</p>
-        <div class="stat-bar"><div class="stat-fill pm" style="width:${p.PM || 0}%">${p.PM || 0}</div></div>
+        <p><span class="icon">🔵</span>PM:</p>
+        <div class="stat-bar"><div class="stat-fill pm">${p.PM || 0}</div></div>
 
-        <p>PF:</p>
-        <div class="stat-bar"><div class="stat-fill pf" style="width:${p.PF || 0}%">${p.PF || 0}</div></div>
+        <p><span class="icon">💪</span>PF:</p>
+        <div class="stat-bar"><div class="stat-fill pf">${p.PF || 0}</div></div>
 
-        <p>PE:</p>
-        <div class="stat-bar"><div class="stat-fill pe" style="width:${p.PE || 0}%">${p.PE || 0}</div></div>
+        <p><span class="icon">⚡</span>PE:</p>
+        <div class="stat-bar"><div class="stat-fill pe">${p.PE || 0}</div></div>
 
-        <p>Vitesse:</p>
-        <div class="stat-bar"><div class="stat-fill vitesse" style="width:${p.Vitesse || 0}%">${p.Vitesse || 0}</div></div>
+        <p><span class="icon">🏃‍♂️</span>Vitesse:</p>
+        <div class="stat-bar"><div class="stat-fill vitesse">${p.Vitesse || 0}</div></div>
       `;
       playerDiv.style.display = 'block';
+
+      // Animation des barres
+      document.querySelectorAll('.stat-fill').forEach(fill => {
+        const value = fill.textContent;
+        fill.style.width = value + '%';
+      });
+
     })
     .catch(err => {
       console.error(err);
