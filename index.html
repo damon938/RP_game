@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Carte Joueur RPG</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Poppins:wght@300;600&display=swap');
+body {
+  background: radial-gradient(circle at center, #200033, #000010);
+  font-family: "Poppins", sans-serif;
+  color: #fff;
+  text-align: center;
+  padding: 30px;
+}
+h1 {
+  font-family: "Cinzel Decorative", cursive;
+  font-size: 2em;
+  color: #f8d15e;
+  text-shadow: 0 0 15px #ffcc00;
+}
+input {
+  padding: 10px;
+  border-radius: 10px;
+  border: none;
+  width: 60%;
+  max-width: 250px;
+  text-align: center;
+  margin: 10px auto;
+  display: block;
+}
+button {
+  background: linear-gradient(90deg, #6a00ff, #a855f7);
+  border: none;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: bold;
+  box-shadow: 0 0 10px rgba(150, 0, 255, 0.5);
+}
+.card {
+  margin-top: 20px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 20px;
+  padding: 20px;
+  max-width: 400px;
+  margin-left: auto;
+  margin-right: auto;
+  box-shadow: 0 0 25px rgba(0, 0, 0, 0.6);
+}
+.stat {
+  background: rgba(0,0,0,0.3);
+  border-radius: 10px;
+  margin: 8px 0;
+  padding: 8px;
+  font-size: 14px;
+}
+.bar {
+  height: 10px;
+  border-radius: 5px;
+  background: #333;
+  overflow: hidden;
+  margin-top: 5px;
+}
+.bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #ffcc00, #ff6600);
+  width: 0%;
+}
+</style>
+</head>
+<body>
+<h1>🎴 Carte du Joueur</h1>
+<p>Entre ton identifiant joueur (ex : ART001)</p>
+<input type="text" id="playerId" placeholder="Ex: ART001">
+<button onclick="loadPlayer()">Afficher ma carte</button>
+
+<div id="result" class="card" style="display:none;"></div>
+
+<script>
+const apiUrl = "https://sheetdb.io/api/v1/gejh59h045ck0";
+
+async function loadPlayer() {
+  const id = document.getElementById("playerId").value.trim().toUpperCase();
+  const resultDiv = document.getElementById("result");
+  resultDiv.style.display = "block";
+  resultDiv.innerHTML = "<p>Chargement…</p>";
+
+  try {
+    const response = await fetch(apiUrl);
+    const data = await response.json();
+
+    const player = data.find(p => p.ID.toUpperCase() === id);
+
+    if (!player) {
+      resultDiv.innerHTML = "<p style='color:red'>❌ ID non trouvé !</p>";
+      return;
+    }
+
+    const xpPercent = Math.min((parseInt(player.XP) / 2000) * 100, 100);
+
+    resultDiv.innerHTML = `
+      <h2>${player.Nom}</h2>
+      <p><b>Race :</b> ${player.Race} | <b>Classe :</b> ${player.Classe}</p>
+      <div class="stat"><b>Niveau :</b> ${player.Niveau}</div>
+      <div class="stat"><b>XP :</b> ${player.XP}</div>
+      <div class="bar"><div class="bar-fill" style="width:${xpPercent}%"></div></div>
+      <div class="stat"><b>PV :</b> ${player.PV}</div>
+      <div class="stat"><b>PM :</b> ${player.PM}</div>
+      <div class="stat"><b>PF :</b> ${player.PF}</div>
+      <div class="stat"><b>PE :</b> ${player.PE}</div>
+      <div class="stat"><b>Vitesse :</b> ${player.Vitesse}</div>
+      <div class="stat"><b>Argent :</b> 💰 ${player.Argent}</div>
+      <div class="stat"><b>Compétence Unique :</b> ${player["Compétence Unique"]}</div>
+      <div class="stat"><b>Attributs :</b> ${player.Attributs}</div>
+      <div class="stat"><b>Rang :</b> ${player.Rang} | <b>Guilde :</b> ${player.Guilde}</div>
+      <div class="stat"><b>Victoires :</b> ⚔️ ${player.Victoires} | <b>Défaites :</b> 💀 ${player.Défaites}</div>
+      <div class="stat"><b>Quêtes :</b> ${player.Quêtes}</div>
+    `;
+  } catch (error) {
+    resultDiv.innerHTML = "<p style='color:red'>❌ Erreur lors du chargement.</p>";
+    console.error(error);
+  }
+}
+</script>
+</body>
+</html>
