@@ -18,13 +18,13 @@
     background: #2a2a2a; 
     padding: 20px; 
     border-radius: 15px; 
-    max-width: 700px; 
+    max-width: 750px; 
     margin: 0 auto; 
     box-shadow: 0 0 20px rgba(0,0,0,0.5);
   }
   .player-card h2 { text-align: center; font-family: 'Cinzel Decorative', serif; color: #ffd700; margin-bottom: 15px; }
   .player-card .row { display: flex; justify-content: space-between; flex-wrap: wrap; margin: 5px 0; }
-  .player-card .col { flex: 1 1 45%; margin: 3px 0; }
+  .player-card .col { flex: 1 1 30%; margin: 3px 0; min-width: 120px; }
   .player-card p { margin: 2px 0; }
   .stat-bar {
     background: #444; 
@@ -81,7 +81,7 @@ function getPlayer() {
   fetch(`${apiUrl}/search?id=${playerId}`)
     .then(res => res.json())
     .then(data => {
-      console.log(data); // debug
+      console.log(data); // debug pour voir le JSON exact
       if(!data || data.length === 0) {
         errorDiv.textContent = 'Joueur inconnu';
         return;
@@ -91,10 +91,13 @@ function getPlayer() {
 
       playerDiv.innerHTML = `
         <h2>${p.Nom || '-'}</h2>
+
         <div class="row">
           <div class="col"><strong>Race:</strong> ${p.Race || '-'}</div>
           <div class="col"><strong>Classe:</strong> ${p.Classe || '-'}</div>
           <div class="col"><strong>Niveau:</strong> ${p.Niveau || '-'}</div>
+        </div>
+        <div class="row">
           <div class="col"><strong>Rang:</strong> ${p.Rang || '-'}</div>
           <div class="col"><strong>Argent:</strong> ${p.Argent || '-'}</div>
           <div class="col"><strong>XP:</strong> ${p.XP || '-'}</div>
@@ -125,6 +128,7 @@ function getPlayer() {
         <p><span class="icon">🏃‍♂️</span>Vitesse:</p>
         <div class="stat-bar"><div class="stat-fill vitesse">${p.Vitesse || 0}</div></div>
       `;
+
       playerDiv.style.display = 'block';
 
       // Animation des barres
