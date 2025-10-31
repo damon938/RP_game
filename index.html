@@ -66,12 +66,44 @@
 <script>
 const apiUrl = 'https://sheetdb.io/api/v1/gejh59h045ck0';
 
-// Retourne valeur ou "VIDE"
-function safeValue(p, key) {
-  if(!p.hasOwnProperty(key) || p[key] === null || p[key].toString().trim() === "") {
+function safeValue(obj, key) {
+  if (!obj.hasOwnProperty(key) || obj[key] === null || obj[key].toString().trim() === "") {
     return "VIDE";
   }
-  return p[key];
+  return obj[key];
+}
+
+
+const keyMapping = {
+  "Nom": ["Nom", "nom", "Name"],
+  "Race": ["Race", "race"],
+  "Classe": ["Classe", "classe", "Class"],
+  "Niveau": ["Niveau", "niveau", "Level"],
+  "Rang": ["Rang", "rang"],
+  "Argent": ["Argent", "argent", "Money"],
+  "Victoires": ["Victoires", "victoires", "Wins"],
+  "Defaites": ["Defaites", "Défaites", "defaites", "Losses"],
+  "Quetes": ["Quetes", "Quêtes", "quetes", "quests"],
+  "PV": ["PV", "pv", "Hp"],
+  "PM": ["PM", "pm", "Mp"],
+  "PF": ["PF", "pf"],
+  "PE": ["PE", "pe"],
+  "Vitesse": ["Vitesse", "vitesse", "Speed"],
+  "Competence": ["Competence", "Compétence", "Skill"],
+  "Attribut": ["Attribut", "attribut", "Attribute"],
+  "Familier": ["Familier", "familier", "Pet"],
+  "XP": ["XP", "xp", "Exp"]
+};
+
+// Fonction pour trouver la bonne clé dans l'objet
+function getMappedValue(obj, displayKey) {
+  const possibleKeys = keyMapping[displayKey];
+  for (let k of possibleKeys) {
+    if (obj.hasOwnProperty(k)) {
+      return safeValue(obj, k);
+    }
+  }
+  return "VIDE";
 }
 
 function getPlayer() {
@@ -89,38 +121,36 @@ function getPlayer() {
   fetch(`${apiUrl}/search?id=${playerId}`)
     .then(res => res.json())
     .then(data => {
-      console.log(data); // toutes les données reçues
       if(!data || data.length === 0) {
         errorDiv.textContent = 'Joueur inconnu';
         return;
       }
 
       const p = data[0];
+      console.log("Toutes les clés JSON :", Object.keys(p)); // debug
 
-      console.log("Clés disponibles pour cet ID :", Object.keys(p)); // debug
-
-      const Nom = safeValue(p, "Nom");
-      const Race = safeValue(p, "Race");
-      const Classe = safeValue(p, "Classe");
-      const Niveau = safeValue(p, "Niveau");
-      const Rang = safeValue(p, "Rang");
-      const Argent = safeValue(p, "Argent");
-      const Victoires = safeValue(p, "Victoires");
-      const Defaites = safeValue(p, "Defaites");
-      const Quetes = safeValue(p, "Quetes");
-      const PV = safeValue(p, "PV");
-      const PM = safeValue(p, "PM");
-      const PF = safeValue(p, "PF");
-      const PE = safeValue(p, "PE");
-      const Vitesse = safeValue(p, "Vitesse");
-      const Competence = safeValue(p, "Competence");
-      const Attribut = safeValue(p, "Attribut");
-      const Familier = safeValue(p, "Familier");
-      const XP = safeValue(p, "XP");
+      // Récupération des valeurs via mapping
+      const Nom = getMappedValue(p, "Nom");
+      const Race = getMappedValue(p, "Race");
+      const Classe = getMappedValue(p, "Classe");
+      const Niveau = getMappedValue(p, "Niveau");
+      const Rang = getMappedValue(p, "Rang");
+      const Argent = getMappedValue(p, "Argent");
+      const Victoires = getMappedValue(p, "Victoires");
+      const Defaites = getMappedValue(p, "Defaites");
+      const Quetes = getMappedValue(p, "Quetes");
+      const PV = getMappedValue(p, "PV");
+      const PM = getMappedValue(p, "PM");
+      const PF = getMappedValue(p, "PF");
+      const PE = getMappedValue(p, "PE");
+      const Vitesse = getMappedValue(p, "Vitesse");
+      const Competence = getMappedValue(p, "Competence");
+      const Attribut = getMappedValue(p, "Attribut");
+      const Familier = getMappedValue(p, "Familier");
+      const XP = getMappedValue(p, "XP");
 
       playerDiv.innerHTML = `
         <h2>${Nom}</h2>
-
         <div class="row">
           <div class="col"><strong>Race:</strong> ${Race}</div>
           <div class="col"><strong>Classe:</strong> ${Classe}</div>
@@ -160,7 +190,7 @@ function getPlayer() {
 
       playerDiv.style.display = 'block';
 
-      // Animation barres
+      
       document.querySelectorAll('.stat-fill').forEach(fill => {
         const value = parseInt(fill.textContent) || 0;
         fill.style.width = value + '%';
