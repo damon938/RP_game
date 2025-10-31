@@ -1,3 +1,44 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Carte Joueur RPG</title>
+<style>
+  body { font-family: Arial, sans-serif; background: #1a1a1a; color: #eee; padding: 20px; }
+  h1 { text-align: center; color: #ffd700; }
+  .input-container { text-align: center; margin-bottom: 20px; }
+  input, button { padding: 10px; font-size: 16px; border-radius: 5px; border: none; }
+  input { width: 200px; margin-right: 10px; }
+  button { background: #4CAF50; color: #fff; cursor: pointer; }
+  #error { color: #ff4d4d; text-align: center; margin-bottom: 10px; }
+
+  .player-card {
+    background: #2a2a2a; 
+    padding: 20px; 
+    border-radius: 15px; 
+    max-width: 750px; 
+    margin: 0 auto; 
+    box-shadow: 0 0 20px rgba(0,0,0,0.5);
+  }
+  .player-card h2 { text-align: center; color: #ffd700; margin-bottom: 15px; }
+  .player-card .row { display: flex; justify-content: space-between; flex-wrap: wrap; margin: 5px 0; }
+  .player-card .col { flex: 1 1 30%; margin: 3px 0; min-width: 120px; }
+  .player-card p { margin: 2px 0; }
+</style>
+</head>
+<body>
+
+<h1>Carte Joueur RPG</h1>
+
+<div class="input-container">
+  <input type="text" id="playerId" placeholder="Entrez l'ID du joueur">
+  <button onclick="getPlayer()">Chercher</button>
+</div>
+
+<div id="error"></div>
+<div id="player" class="player-card" style="display:none;"></div>
+
 <script>
 const apiUrl = 'https://sheetdb.io/api/v1/gejh59h045ck0';
 
@@ -5,18 +46,29 @@ function safeValue(val) {
   return (val === undefined || val === null || val.toString().trim() === '') ? 'VIDE' : val;
 }
 
-function getPlayer(playerId) {
+function getPlayer() {
+  const playerId = document.getElementById('playerId').value.trim();
+  const playerDiv = document.getElementById('player');
+  const errorDiv = document.getElementById('error');
+
+  playerDiv.style.display = 'none';
+  errorDiv.textContent = '';
+
+  if(!playerId) {
+    errorDiv.textContent = 'Veuillez entrer un ID.';
+    return;
+  }
+
   fetch(`${apiUrl}/search?id=${encodeURIComponent(playerId)}`)
     .then(res => res.json())
     .then(data => {
-      if (!data || data.length === 0) {
-        console.log('Joueur inconnu');
+      if(!data || data.length === 0) {
+        errorDiv.textContent = 'Joueur inconnu';
         return;
       }
-      const p = data[0];
 
-      console.log('Données reçues:', p);
-      console.log('Toutes les clés reçues:', Object.keys(p));
+      const p = data[0];
+      console.log("Données reçues :", p);
 
       const Nom = safeValue(p.Nom);
       const Race = safeValue(p.Race);
@@ -37,21 +89,44 @@ function getPlayer(playerId) {
       const Familier = safeValue(p.Familier);
       const XP = safeValue(p.XP);
 
-      // Affichage stylé
-      const html = `
+      playerDiv.innerHTML = `
         <h2>${Nom}</h2>
-        <p>Race: ${Race} | Classe: ${Classe} | Niveau: ${Niveau} | Rang: ${Rang}</p>
-        <p>Argent: ${Argent} | XP: ${XP}</p>
-        <p>Victoires: ${Victoires} | Défaites: ${Defaites} | Quêtes: ${Quetes}</p>
-        <p>Compétence: ${Competence} | Attribut: ${Attribut} | Familier: ${Familier}</p>
-        <p>PV: ${PV} | PM: ${PM} | PF: ${PF} | PE: ${PE} | Vitesse: ${Vitesse}</p>
+        <div class="row">
+          <div class="col"><strong>Race:</strong> ${Race}</div>
+          <div class="col"><strong>Classe:</strong> ${Classe}</div>
+          <div class="col"><strong>Niveau:</strong> ${Niveau}</div>
+        </div>
+        <div class="row">
+          <div class="col"><strong>Rang:</strong> ${Rang}</div>
+          <div class="col"><strong>Argent:</strong> ${Argent}</div>
+          <div class="col"><strong>XP:</strong> ${XP}</div>
+        </div>
+        <div class="row">
+          <div class="col"><strong>Victoires:</strong> ${Victoires}</div>
+          <div class="col"><strong>Défaites:</strong> ${Defaites}</div>
+          <div class="col"><strong>Quêtes:</strong> ${Quetes}</div>
+        </div>
+        <div class="row">
+          <div class="col"><strong>Compétence:</strong> ${Competence}</div>
+          <div class="col"><strong>Attribut:</strong> ${Attribut}</div>
+          <div class="col"><strong>Familier:</strong> ${Familier}</div>
+        </div>
+        <div class="row">
+          <div class="col"><strong>PV:</strong> ${PV}</div>
+          <div class="col"><strong>PM:</strong> ${PM}</div>
+          <div class="col"><strong>PF:</strong> ${PF}</div>
+          <div class="col"><strong>PE:</strong> ${PE}</div>
+          <div class="col"><strong>Vitesse:</strong> ${Vitesse}</div>
+        </div>
       `;
-      document.getElementById('player').innerHTML = html;
-      document.getElementById('player').style.display = 'block';
+      playerDiv.style.display = 'block';
     })
-    .catch(err => console.error('Erreur fetch:', err));
+    .catch(err => {
+      console.error('Erreur fetch:', err);
+      errorDiv.textContent = 'Erreur lors de la récupération des données.';
+    });
 }
-
-// Exemple
-getPlayer('ARK001');
 </script>
+
+</body>
+</html>
