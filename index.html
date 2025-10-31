@@ -26,23 +26,8 @@
   .player-card .row { display: flex; justify-content: space-between; flex-wrap: wrap; margin: 5px 0; }
   .player-card .col { flex: 1 1 30%; margin: 3px 0; min-width: 120px; }
   .player-card p { margin: 2px 0; }
-  .stat-bar {
-    background: #444; 
-    border-radius: 10px; 
-    overflow: hidden; 
-    margin: 5px 0; 
-    height: 20px;
-    position: relative;
-  }
-  .stat-fill {
-    height: 100%; 
-    text-align: right; 
-    padding-right: 5px; 
-    color: #fff; 
-    font-weight: bold;
-    width: 0%;
-    transition: width 1s ease;
-  }
+  .stat-bar { background: #444; border-radius: 10px; overflow: hidden; margin: 5px 0; height: 20px; position: relative; }
+  .stat-fill { height: 100%; text-align: right; padding-right: 5px; color: #fff; font-weight: bold; width: 0%; transition: width 1s ease; }
   .pv { background: #ff4d4d; }
   .pm { background: #4d79ff; }
   .pf { background: #ffa64d; }
@@ -63,47 +48,13 @@
 <div id="error"></div>
 <div id="player" class="player-card" style="display:none;"></div>
 
+<script src="https://cdn.jsdelivr.net/npm/tabletop@1.6.0/src/tabletop.js"></script>
 <script>
-const apiUrl = 'https://sheetdb.io/api/v1/gejh59h045ck0';
+const sheetId = '1O2abmp1w-IdvbqHXSEXD63Nu6XK4KfJqiOL_8M-i2fA';
 
-function safeValue(obj, key) {
-  if (!obj.hasOwnProperty(key) || obj[key] === null || obj[key].toString().trim() === "") {
-    return "VIDE";
-  }
-  return obj[key];
-}
-
-
-const keyMapping = {
-  "Nom": ["Nom", "nom", "Name"],
-  "Race": ["Race", "race"],
-  "Classe": ["Classe", "classe", "Class"],
-  "Niveau": ["Niveau", "niveau", "Level"],
-  "Rang": ["Rang", "rang"],
-  "Argent": ["Argent", "argent", "Money"],
-  "Victoires": ["Victoires", "victoires", "Wins"],
-  "Defaites": ["Defaites", "Défaites", "defaites", "Losses"],
-  "Quetes": ["Quetes", "Quêtes", "quetes", "quests"],
-  "PV": ["PV", "pv", "Hp"],
-  "PM": ["PM", "pm", "Mp"],
-  "PF": ["PF", "pf"],
-  "PE": ["PE", "pe"],
-  "Vitesse": ["Vitesse", "vitesse", "Speed"],
-  "Competence": ["Competence", "Compétence", "Skill"],
-  "Attribut": ["Attribut", "attribut", "Attribute"],
-  "Familier": ["Familier", "familier", "Pet"],
-  "XP": ["XP", "xp", "Exp"]
-};
-
-// Fonction pour trouver la bonne clé dans l'objet
-function getMappedValue(obj, displayKey) {
-  const possibleKeys = keyMapping[displayKey];
-  for (let k of possibleKeys) {
-    if (obj.hasOwnProperty(k)) {
-      return safeValue(obj, k);
-    }
-  }
-  return "VIDE";
+function safeValue(value) {
+  if(value === null || value === undefined || value.toString().trim() === "") return "VIDE";
+  return value;
 }
 
 function getPlayer() {
@@ -118,36 +69,36 @@ function getPlayer() {
     return;
   }
 
-  fetch(`${apiUrl}/search?id=${playerId}`)
-    .then(res => res.json())
-    .then(data => {
-      if(!data || data.length === 0) {
+  Tabletop.init({
+    key: sheetId,
+    simpleSheet: true,
+    callback: function(data) {
+      const p = data.find(row => row.ID === playerId || row.id === playerId);
+      if(!p) {
         errorDiv.textContent = 'Joueur inconnu';
         return;
       }
 
-      const p = data[0];
-      console.log("Toutes les clés JSON :", Object.keys(p)); // debug
+      console.log("Données reçues :", p);
 
-      // Récupération des valeurs via mapping
-      const Nom = getMappedValue(p, "Nom");
-      const Race = getMappedValue(p, "Race");
-      const Classe = getMappedValue(p, "Classe");
-      const Niveau = getMappedValue(p, "Niveau");
-      const Rang = getMappedValue(p, "Rang");
-      const Argent = getMappedValue(p, "Argent");
-      const Victoires = getMappedValue(p, "Victoires");
-      const Defaites = getMappedValue(p, "Defaites");
-      const Quetes = getMappedValue(p, "Quetes");
-      const PV = getMappedValue(p, "PV");
-      const PM = getMappedValue(p, "PM");
-      const PF = getMappedValue(p, "PF");
-      const PE = getMappedValue(p, "PE");
-      const Vitesse = getMappedValue(p, "Vitesse");
-      const Competence = getMappedValue(p, "Competence");
-      const Attribut = getMappedValue(p, "Attribut");
-      const Familier = getMappedValue(p, "Familier");
-      const XP = getMappedValue(p, "XP");
+      const Nom = safeValue(p.Nom);
+      const Race = safeValue(p.Race);
+      const Classe = safeValue(p.Classe);
+      const Niveau = safeValue(p.Niveau);
+      const Rang = safeValue(p.Rang);
+      const Argent = safeValue(p.Argent);
+      const Victoires = safeValue(p.Victoires);
+      const Defaites = safeValue(p.Defaites);
+      const Quetes = safeValue(p.Quetes);
+      const PV = safeValue(p.PV);
+      const PM = safeValue(p.PM);
+      const PF = safeValue(p.PF);
+      const PE = safeValue(p.PE);
+      const Vitesse = safeValue(p.Vitesse);
+      const Competence = safeValue(p.Competence);
+      const Attribut = safeValue(p.Attribut);
+      const Familier = safeValue(p.Familier);
+      const XP = safeValue(p.XP);
 
       playerDiv.innerHTML = `
         <h2>${Nom}</h2>
@@ -190,17 +141,13 @@ function getPlayer() {
 
       playerDiv.style.display = 'block';
 
-      
       document.querySelectorAll('.stat-fill').forEach(fill => {
         const value = parseInt(fill.textContent) || 0;
         fill.style.width = value + '%';
       });
 
-    })
-    .catch(err => {
-      console.error(err);
-      errorDiv.textContent = 'Erreur lors de la récupération des données';
-    });
+    }
+  });
 }
 </script>
 
