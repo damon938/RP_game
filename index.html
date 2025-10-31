@@ -66,14 +66,6 @@
 <script>
 const apiUrl = 'https://sheetdb.io/api/v1/gejh59h045ck0';
 
-// Fonction pour retourner la valeur ou "VIDE" si vide
-function safeValue(val) {
-  if(val === undefined || val === null || val.toString().trim() === "") {
-    return "VIDE";
-  }
-  return val;
-}
-
 function getPlayer() {
   const playerId = document.getElementById('playerId').value.trim();
   const playerDiv = document.getElementById('player');
@@ -89,7 +81,7 @@ function getPlayer() {
   fetch(`${apiUrl}/search?id=${playerId}`)
     .then(res => res.json())
     .then(data => {
-      console.log(data); // debug pour vérifier les valeurs reçues
+      console.log(data); 
       if(!data || data.length === 0) {
         errorDiv.textContent = 'Joueur inconnu';
         return;
@@ -97,49 +89,69 @@ function getPlayer() {
 
       const p = data[0];
 
+    
+      const Nom = p.Nom ?? "VIDE";
+      const Race = p.Race ?? "VIDE";
+      const Classe = p.Classe ?? "VIDE";
+      const Niveau = p.Niveau ?? "VIDE";
+      const Rang = p.Rang ?? "VIDE";
+      const Argent = p.Argent ?? "VIDE";
+      const Victoires = p.Victoires ?? "VIDE";
+      const Defaites = p.Defaites ?? "VIDE";
+      const Quetes = p.Quetes ?? "VIDE";
+      const PV = p.PV ?? 0;
+      const PM = p.PM ?? 0;
+      const PF = p.PF ?? 0;
+      const PE = p.PE ?? 0;
+      const Vitesse = p.Vitesse ?? 0;
+      const Competence = p.Competence ?? "VIDE";
+      const Attribut = p.Attribut ?? "VIDE";
+      const Familier = p.Familier ?? "VIDE";
+      const XP = p.XP ?? "VIDE";
+
       playerDiv.innerHTML = `
-        <h2>${safeValue(p.Nom)}</h2>
+        <h2>${Nom}</h2>
 
         <div class="row">
-          <div class="col"><strong>Race:</strong> ${safeValue(p.Race)}</div>
-          <div class="col"><strong>Classe:</strong> ${safeValue(p.Classe)}</div>
-          <div class="col"><strong>Niveau:</strong> ${safeValue(p.Niveau)}</div>
+          <div class="col"><strong>Race:</strong> ${Race}</div>
+          <div class="col"><strong>Classe:</strong> ${Classe}</div>
+          <div class="col"><strong>Niveau:</strong> ${Niveau}</div>
         </div>
         <div class="row">
-          <div class="col"><strong>Rang:</strong> ${safeValue(p.Rang)}</div>
-          <div class="col"><strong>Argent:</strong> ${safeValue(p.Argent)}</div>
-          <div class="col"><strong>XP:</strong> ${safeValue(p.XP)}</div>
+          <div class="col"><strong>Rang:</strong> ${Rang}</div>
+          <div class="col"><strong>Argent:</strong> ${Argent}</div>
+          <div class="col"><strong>XP:</strong> ${XP}</div>
         </div>
         <div class="row">
-          <div class="col"><strong>Victoires:</strong> ${safeValue(p.Victoires)}</div>
-          <div class="col"><strong>Défaites:</strong> ${safeValue(p.Defaites)}</div>
-          <div class="col"><strong>Quêtes:</strong> ${safeValue(p.Quetes)}</div>
+          <div class="col"><strong>Victoires:</strong> ${Victoires}</div>
+          <div class="col"><strong>Défaites:</strong> ${Defaites}</div>
+          <div class="col"><strong>Quêtes:</strong> ${Quetes}</div>
         </div>
         <div class="row">
-          <div class="col"><strong>Compétence:</strong> ${safeValue(p.Competence)}</div>
-          <div class="col"><strong>Attribut:</strong> ${safeValue(p.Attribut)}</div>
-          <div class="col"><strong>Familier:</strong> ${safeValue(p.Familier)}</div>
+          <div class="col"><strong>Compétence:</strong> ${Competence}</div>
+          <div class="col"><strong>Attribut:</strong> ${Attribut}</div>
+          <div class="col"><strong>Familier:</strong> ${Familier}</div>
         </div>
 
         <p><span class="icon">❤️</span>PV:</p>
-        <div class="stat-bar"><div class="stat-fill pv">${safeValue(p.PV)}</div></div>
+        <div class="stat-bar"><div class="stat-fill pv">${PV}</div></div>
 
         <p><span class="icon">🔵</span>PM:</p>
-        <div class="stat-bar"><div class="stat-fill pm">${safeValue(p.PM)}</div></div>
+        <div class="stat-bar"><div class="stat-fill pm">${PM}</div></div>
 
         <p><span class="icon">💪</span>PF:</p>
-        <div class="stat-bar"><div class="stat-fill pf">${safeValue(p.PF)}</div></div>
+        <div class="stat-bar"><div class="stat-fill pf">${PF}</div></div>
 
         <p><span class="icon">⚡</span>PE:</p>
-        <div class="stat-bar"><div class="stat-fill pe">${safeValue(p.PE)}</div></div>
+        <div class="stat-bar"><div class="stat-fill pe">${PE}</div></div>
 
         <p><span class="icon">🏃‍♂️</span>Vitesse:</p>
-        <div class="stat-bar"><div class="stat-fill vitesse">${safeValue(p.Vitesse)}</div></div>
+        <div class="stat-bar"><div class="stat-fill vitesse">${Vitesse}</div></div>
       `;
 
       playerDiv.style.display = 'block';
 
-      // Animation des barres
+      
       document.querySelectorAll('.stat-fill').forEach(fill => {
         const value = parseInt(fill.textContent) || 0;
         fill.style.width = value + '%';
