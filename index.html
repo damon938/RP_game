@@ -2,28 +2,99 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<title>Debug SheetDB</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Carte Joueur RPG</title>
+<style>
+  body {
+    font-family: 'Poppins', sans-serif;
+    background: #0e0e1a;
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+  .card {
+    background: #1b1b2f;
+    border-radius: 20px;
+    padding: 25px 40px;
+    width: 420px;
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+  }
+  input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border-radius: 8px;
+    border: none;
+    outline: none;
+    text-align: center;
+  }
+  button {
+    background: #3a86ff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    width: 100%;
+    font-weight: bold;
+  }
+  button:hover { background: #265cc2; }
+  .info { margin-top: 20px; white-space: pre-line; }
+</style>
 </head>
 <body>
-<input id="playerId" placeholder="ARK001">
-<button onclick="searchPlayer()">Tester</button>
-<pre id="result">Résultat ici...</pre>
+
+<div class="card">
+  <h2>🔮 Fiche du joueur</h2>
+  <input type="text" id="playerId" placeholder="Entre ton ID ex: ARK001">
+  <button onclick="searchPlayer()">Chercher</button>
+  <div id="result" class="info"></div>
+</div>
 
 <script>
 async function searchPlayer() {
   const id = document.getElementById("playerId").value.trim();
-  const res = document.getElementById("result");
-  res.textContent = "Chargement...";
+  const resultDiv = document.getElementById("result");
+  resultDiv.innerHTML = "⏳ Chargement...";
 
   try {
     const response = await fetch(`https://sheetdb.io/api/v1/o0vmbzvmiboaz/search?id=${id}`);
+    if (!response.ok) throw new Error("Erreur réseau");
     const data = await response.json();
-    console.log("Réponse complète :", data); // <-- Voir console
-    res.textContent = JSON.stringify(data, null, 2);
-  } catch (err) {
-    res.textContent = "Erreur : " + err.message;
+
+    if (data.length === 0) {
+      resultDiv.innerHTML = "⚠️ Joueur introuvable.";
+      return;
+    }
+
+    const p = data[0]; // premier joueur trouvé
+    resultDiv.innerHTML = `
+🧾 Nom: ${p["Nom "] || "vide"}  
+🧬 Race: ${p["Race"] || "vide"}  
+⚔️ Classe: ${p["Classe"] || "vide"}  
+⭐ Niveau: ${p["Niveau"] || "vide"}  
+🏅 Rang: ${p["Rang"] || "vide"}  
+💰 Argent: ${p["Argent "] || "vide"}  
+🏆 Victoires: ${p["Victoires"] || "vide"}  
+💀 Défaites: ${p["Défaites"] || "vide"}  
+📜 Quêtes: ${p["Quêtes "] || "vide"}  
+❤️ PV: ${p["PV"] || "vide"}  
+🔮 PM: ${p["PM"] || "vide"}  
+⚡ PF: ${p["PF"] || "vide"}  
+🔥 PE: ${p["PE"] || "vide"}  
+💨 Vitesse: ${p["Vitesse "] || "vide"}  
+✨ Compétence: ${p["Competence "] || "vide"}  
+⚖️ Attribut: ${p["Attribut "] || "vide"}  
+🐾 Familier: ${p["Familier "] || "vide"}  
+🧠 XP: ${p["XP"] || "vide"}
+    `;
+  } catch (e) {
+    resultDiv.innerHTML = "❌ Erreur lors de la récupération des données.";
   }
 }
 </script>
+
 </body>
 </html>
