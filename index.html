@@ -18,7 +18,7 @@
     background: #1b1b2f;
     border-radius: 20px;
     padding: 25px 40px;
-    width: 400px;
+    width: 420px;
     box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
   }
   input {
@@ -71,23 +71,24 @@ async function searchPlayer() {
 
     const p = data[0];
     resultDiv.innerHTML = `
-🧾 Nom: ${p.nom || "vide"}  
-🧬 Race: ${p.race || "vide"}  
-⚔️ Classe: ${p.classe || "vide"}  
-⭐ Niveau: ${p.niveau || "vide"}  
-💰 Argent: ${p.argent || "vide"}  
-🏆 Victoires: ${p.victoires || "vide"}  
-💀 Défaites: ${p.defaites || "vide"}  
-📜 Quêtes: ${p.quetes || "vide"}  
-❤️ PV: ${p.pv || "vide"}  
-🔮 PM: ${p.pm || "vide"}  
-⚡ PF: ${p.pf || "vide"}  
-🔥 PE: ${p.pe || "vide"}  
-💨 Vitesse: ${p.vitesse || "vide"}  
-✨ Compétence: ${p.competence || "vide"}  
-⚖️ Attribut: ${p.attribut || "vide"}  
-🐾 Familier: ${p.familier || "vide"}  
-🧠 XP: ${p.xp || "vide"}
+🧾 Nom: ${p["Nom "] || "vide"}  
+🧬 Race: ${p["Race"] || "vide"}  
+⚔️ Classe: ${p["Classe"] || "vide"}  
+⭐ Niveau: ${p["Niveau"] || "vide"}  
+🏅 Rang: ${p["Rang"] || "vide"}  
+💰 Argent: ${p["Argent "] || "vide"}  
+🏆 Victoires: ${p["Victoires"] || "vide"}  
+💀 Défaites: ${p["Défaites"] || "vide"}  
+📜 Quêtes: ${p["Quêtes "] || "vide"}  
+❤️ PV: ${p["PV"] || "vide"}  
+🔮 PM: ${p["PM"] || "vide"}  
+⚡ PF: ${p["PF"] || "vide"}  
+🔥 PE: ${p["PE"] || "vide"}  
+💨 Vitesse: ${p["Vitesse "] || "vide"}  
+✨ Compétence: ${p["Competence "] || "vide"}  
+⚖️ Attribut: ${p["Attribut "] || "vide"}  
+🐾 Familier: ${p["Familier "] || "vide"}  
+🧠 XP: ${p["XP"] || "vide"}
     `;
   } catch (e) {
     resultDiv.innerHTML = "❌ Erreur lors de la récupération des données.";
