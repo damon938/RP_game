@@ -7,19 +7,25 @@
 <style>
   body {
     font-family: 'Poppins', sans-serif;
-    background: #0e0e1a;
+    background: radial-gradient(circle at top left, #1b1b2f, #0a0a1a);
     color: #fff;
     display: flex;
     justify-content: center;
-    align-items: center;
-    height: 100vh;
+    align-items: flex-start;
+    padding-top: 50px;
+    min-height: 100vh;
   }
   .card {
-    background: #1b1b2f;
+    background: #22223b;
     border-radius: 20px;
-    padding: 25px 40px;
-    width: 420px;
-    box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+    padding: 30px 40px;
+    width: 450px;
+    box-shadow: 0 0 30px rgba(255,255,255,0.1);
+  }
+  h2 {
+    text-align: center;
+    color: #00ffff;
+    text-shadow: 0 0 10px #00ffff;
   }
   input {
     width: 100%;
@@ -29,26 +35,34 @@
     border: none;
     outline: none;
     text-align: center;
+    font-size: 16px;
   }
   button {
     background: #3a86ff;
     color: white;
     border: none;
-    padding: 10px 20px;
+    padding: 10px;
     border-radius: 8px;
     cursor: pointer;
     width: 100%;
     font-weight: bold;
+    margin-bottom: 20px;
   }
   button:hover { background: #265cc2; }
-  .info { margin-top: 20px; white-space: pre-line; }
+  .info { 
+    background: #1f1f2e; 
+    padding: 15px; 
+    border-radius: 15px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.5);
+    white-space: pre-line; 
+  }
 </style>
 </head>
 <body>
 
 <div class="card">
   <h2>🔮 Fiche du joueur</h2>
-  <input type="text" id="playerId" placeholder="Entre ton ID ex: ARK001">
+  <input type="text" id="playerId" placeholder="Entrez l'ID (ex: ARK001)">
   <button onclick="searchPlayer()">Chercher</button>
   <div id="result" class="info"></div>
 </div>
@@ -69,7 +83,7 @@ async function searchPlayer() {
       return;
     }
 
-    const p = data[0]; // premier joueur trouvé
+    const p = data[0];
     resultDiv.innerHTML = `
 🧾 Nom: ${p["Nom "] || "vide"}  
 🧬 Race: ${p["Race"] || "vide"}  
