@@ -3,192 +3,162 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Fiche Joueur RPG</title>
+<title>Carte Joueur RPG</title>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@600&family=Poppins:wght@300;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Poppins:wght@400;600&display=swap');
 
 body {
+  background: linear-gradient(135deg, #0d1b2a, #1b263b);
   font-family: 'Poppins', sans-serif;
-  background: linear-gradient(135deg, #141414, #2a2a2a);
-  color: #f5f5f5;
+  color: #e0e0e0;
+  margin: 0;
+  padding: 0;
   display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  padding: 50px 10px;
+  flex-direction: column;
+  align-items: center;
   min-height: 100vh;
 }
 
-.card {
-  background: #1f1f1f;
-  border: 2px solid #d4af37;
-  border-radius: 15px;
-  padding: 30px 40px;
-  max-width: 650px;
-  width: 100%;
-  box-shadow: 0 0 25px rgba(0, 0, 0, 0.7);
+.container {
+  background: rgba(20, 40, 80, 0.9);
+  border-radius: 20px;
+  box-shadow: 0 0 25px rgba(0, 150, 255, 0.3);
+  padding: 30px;
+  margin-top: 40px;
+  width: 90%;
+  max-width: 700px;
+  text-align: center;
 }
 
 h1 {
-  font-family: 'Cinzel', serif;
-  color: #ffd369;
-  font-size: 32px;
-  text-align: center;
-  margin-bottom: 20px;
-  text-shadow: 2px 2px 10px #000;
+  font-family: 'Cinzel Decorative', cursive;
+  color: #00b4d8;
+  font-size: 2.5em;
+  margin-bottom: 10px;
 }
 
+.section {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 15px;
+  padding: 15px;
+  margin: 10px 0;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+.stats {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  margin-top: 10px;
+}
+
+.stat {
+  flex: 1 1 40%;
+  margin: 5px;
+  padding: 10px;
+  border-radius: 10px;
+  font-weight: 600;
+  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.4);
+}
+
+.red { background: rgba(255, 0, 0, 0.2); color: #ff6b6b; }
+.blue { background: rgba(0, 100, 255, 0.2); color: #4da3ff; }
+.green { background: rgba(0, 255, 100, 0.2); color: #70ff70; }
+.orange { background: rgba(255, 150, 0, 0.2); color: #ffb84d; }
+.yellow { background: rgba(255, 255, 0, 0.2); color: #ffff70; }
+
 input {
-  width: 100%;
-  padding: 12px;
-  margin-bottom: 15px;
-  border-radius: 8px;
-  border: 2px solid #ffd369;
-  background: #2e2e2e;
-  color: #fff;
-  font-size: 16px;
+  padding: 10px;
+  border: none;
+  border-radius: 10px;
+  width: 200px;
   text-align: center;
+  margin-right: 10px;
 }
 
 button {
-  width: 100%;
-  padding: 12px;
-  background: #ffd369;
+  background: #0077b6;
   border: none;
-  border-radius: 8px;
+  padding: 10px 20px;
+  color: white;
+  border-radius: 10px;
   cursor: pointer;
-  font-weight: bold;
-  font-size: 16px;
-  color: #141414;
-  margin-bottom: 25px;
+  transition: 0.3s;
 }
-
-button:hover {
-  background: #ffda73;
-}
-
-.info {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
-
-.row {
-  display: flex;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 10px;
-}
-
-.field {
-  flex: 1 1 45%;
-  background: #2b2b2b;
-  padding: 10px 15px;
-  border-radius: 8px;
-  border-left: 4px solid #ffd369;
-}
-
-.field span {
-  display: block;
-  font-weight: bold;
-  color: #ffd369;
-  margin-bottom: 4px;
-}
-
-.bar-container {
-  background: #333;
-  border-radius: 6px;
-  overflow: hidden;
-  height: 14px;
-  margin-top: 5px;
-}
-
-.bar {
-  height: 100%;
-  transition: width 0.8s ease;
-}
-
-.bar.pv { background: #ff4b4b; }
-.bar.pm { background: #4b7bff; }
-.bar.pf { background: #43ff7a; }
-.bar.pe { background: #ffe04b; }
+button:hover { background: #00b4d8; }
 </style>
 </head>
 <body>
 
-<div class="card">
-  <h1 id="playerName">Fiche du Joueur</h1>
-  <input type="text" id="playerId" placeholder="Entrez l'ID (ex: ARK001)">
-  <button onclick="searchPlayer()">Rechercher</button>
-  <div id="result" class="info"></div>
+<div class="container">
+  <h1 id="nom">Nom du Joueur</h1>
+  <input type="text" id="playerId" placeholder="Entrez ID ex: ARK001">
+  <button onclick="getData()">Rechercher</button>
+
+  <div class="section">
+    <p><b>Race :</b> <span id="race"></span></p>
+    <p><b>Classe :</b> <span id="classe"></span></p>
+    <p><b>Niveau :</b> <span id="niveau"></span></p>
+    <p><b>Rang :</b> <span id="rang"></span></p>
+    <p><b>Argent :</b> <span id="argent"></span> 💰</p>
+  </div>
+
+  <div class="section stats">
+    <div class="stat red">PV : <span id="pv"></span></div>
+    <div class="stat blue">PM : <span id="pm"></span></div>
+    <div class="stat green">PF : <span id="pf"></span></div>
+    <div class="stat orange">PE : <span id="pe"></span></div>
+    <div class="stat yellow">Vitesse : <span id="vitesse"></span></div>
+  </div>
+
+  <div class="section">
+    <p><b>Victoires :</b> <span id="victoires"></span></p>
+    <p><b>Défaites :</b> <span id="defaites"></span></p>
+    <p><b>Quêtes :</b> <span id="quetes"></span></p>
+    <p><b>XP :</b> <span id="xp"></span></p>
+  </div>
+
+  <div class="section">
+    <p><b>Compétence :</b> <span id="competence"></span></p>
+    <p><b>Attribut :</b> <span id="attribut"></span></p>
+    <p><b>Familier :</b> <span id="familier"></span></p>
+  </div>
 </div>
 
 <script>
-async function searchPlayer() {
+async function getData() {
   const id = document.getElementById("playerId").value.trim();
-  const resultDiv = document.getElementById("result");
-  const playerName = document.getElementById("playerName");
-  resultDiv.innerHTML = "<div>⏳ Chargement...</div>";
-  playerName.textContent = "Fiche du Joueur";
-
+  if (!id) return alert("Entre un ID !");
   try {
-    const response = await fetch(`https://sheetdb.io/api/v1/o0vmbzvmiboaz/search?id=${id}`);
-    if (!response.ok) throw new Error("Erreur réseau");
-    const data = await response.json();
-
-    if (data.length === 0) {
-      resultDiv.innerHTML = "<div>⚠️ Joueur introuvable.</div>";
+    const res = await fetch(`https://sheetdb.io/api/v1/o0vmbzvmiboaz/search?id=${id}`);
+    const data = await res.json();
+    if (!data || data.length === 0) {
+      alert("Aucun joueur trouvé !");
       return;
     }
 
-    const p = data[0];
-    playerName.textContent = p["Nom "] || "Aventurier inconnu";
-
-    resultDiv.innerHTML = `
-      <div class="row">
-        <div class="field"><span>Race</span>${p["Race"] || "vide"}</div>
-        <div class="field"><span>Classe</span>${p["Classe"] || "vide"}</div>
-        <div class="field"><span>Niveau</span>${p["Niveau"] || "vide"}</div>
-        <div class="field"><span>Rang</span>${p["Rang"] || "vide"}</div>
-      </div>
-      <div class="row">
-        <div class="field"><span>Argent</span>${p["Argent "] || "vide"} 💰</div>
-        <div class="field"><span>XP</span>${p["XP"] || "vide"}</div>
-        <div class="field"><span>Victoires</span>${p["Victoires"] || "vide"}</div>
-        <div class="field"><span>Défaites</span>${p["Défaites"] || "vide"}</div>
-      </div>
-      <div class="field"><span>Quêtes</span>${p["Quêtes "] || "vide"}</div>
-      <div class="row">
-        <div class="field"><span>PV</span>${p["PV"] || "vide"}
-          <div class="bar-container"><div class="bar pv" id="bar-pv"></div></div>
-        </div>
-        <div class="field"><span>PM</span>${p["PM"] || "vide"}
-          <div class="bar-container"><div class="bar pm" id="bar-pm"></div></div>
-        </div>
-        <div class="field"><span>PF</span>${p["PF"] || "vide"}
-          <div class="bar-container"><div class="bar pf" id="bar-pf"></div></div>
-        </div>
-        <div class="field"><span>PE</span>${p["PE"] || "vide"}
-          <div class="bar-container"><div class="bar pe" id="bar-pe"></div></div>
-        </div>
-      </div>
-      <div class="row">
-        <div class="field"><span>Vitesse</span>${p["Vitesse "] || "vide"}</div>
-        <div class="field"><span>Compétence</span>${p["Competence "] || "vide"}</div>
-        <div class="field"><span>Attribut</span>${p["Attribut "] || "vide"}</div>
-        <div class="field"><span>Familier</span>${p["Familier "] || "vide"}</div>
-      </div>
-    `;
-
-    // Barres de stats animées
-    setTimeout(() => {
-      document.getElementById("bar-pv").style.width = `${(p["PV"] || 0) * 10}%`;
-      document.getElementById("bar-pm").style.width = `${(p["PM"] || 0) * 10}%`;
-      document.getElementById("bar-pf").style.width = `${(p["PF"] || 0) * 10}%`;
-      document.getElementById("bar-pe").style.width = `${(p["PE"] || 0) * 10}%`;
-    }, 300);
-
+    const joueur = data[0];
+    document.getElementById("nom").textContent = joueur["Nom "] || "Inconnu";
+    document.getElementById("race").textContent = joueur["Race"] || "";
+    document.getElementById("classe").textContent = joueur["Classe"] || "";
+    document.getElementById("niveau").textContent = joueur["Niveau"] || "";
+    document.getElementById("rang").textContent = joueur["Rang"] || "";
+    document.getElementById("argent").textContent = joueur["Argent "] || "";
+    document.getElementById("victoires").textContent = joueur["Victoires"] || "";
+    document.getElementById("defaites").textContent = joueur["Défaites"] || "";
+    document.getElementById("quetes").textContent = joueur["Quêtes "] || "";
+    document.getElementById("pv").textContent = joueur["PV"] || "";
+    document.getElementById("pm").textContent = joueur["PM"] || "";
+    document.getElementById("pf").textContent = joueur["PF"] || "";
+    document.getElementById("pe").textContent = joueur["PE"] || "";
+    document.getElementById("vitesse").textContent = joueur["Vitesse "] || "";
+    document.getElementById("competence").textContent = joueur["Competence "] || "";
+    document.getElementById("attribut").textContent = joueur["Attribut "] || "";
+    document.getElementById("familier").textContent = joueur["Familier "] || "";
+    document.getElementById("xp").textContent = joueur["XP"] || "";
   } catch (e) {
-    resultDiv.innerHTML = "<div>❌ Erreur lors de la récupération des données.</div>";
+    alert("Erreur lors de la récupération des données !");
+    console.error(e);
   }
 }
 </script>
